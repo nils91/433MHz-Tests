@@ -10,8 +10,8 @@ int main (void)
   pullUpDnControl (2, PUD_DOWN); 
   for (;;)
   {
-    digitalWrite (0, HIGH) ; delay (500) ;
-    digitalWrite (0,  LOW) ; delay (500) ;
+	  int r_status=digitalRead(2);
+	  digitalWrite(0, r_status);
   }
   return 0 ;
 }
