@@ -30,13 +30,14 @@ int main (void)
 	  if(r_status!=signal_status){
 		  printf("Signal change\n");
 		  printf("Signal is now %i\n",r_status);
-		  if(r_status==0){
+		  if(r_status==0){ 
+		  signal_stop_nanosec=get_nanos();
 			  printf("Signal was on %ld\n",signal_stop_nanosec-signal_start_nanosec);
-			  signal_stop_nanosec=get_nanos();
+			 
 		  }else{
-			  
+			   signal_start_nanosec=get_nanos();
 			  printf("Signal was off %ld\n",signal_start_nanosec-signal_stop_nanosec);
-			  signal_start_nanosec=get_nanos();
+			 
 		  }
 		  signal_status=r_status;
 		  
