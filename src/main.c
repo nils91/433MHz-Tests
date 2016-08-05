@@ -6,7 +6,7 @@
 
 static long get_nanos(void) {
     struct timespec ts;
-    timespec_get(&ts, TIME_UTC);
+    clock_gettime(CLOCK_MONOTONIC,&ts);
     return (long)ts.tv_sec * 1000000000L + ts.tv_nsec;
 }
 int main (void)
