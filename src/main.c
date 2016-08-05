@@ -12,6 +12,8 @@ int main (void)
   {
 	  int r_status=digitalRead(2);
 	  digitalWrite(0, r_status);
+	  delay(250);
+	  digitalWrite(1,r_status*-1+1);
   }
   return 0 ;
 }
