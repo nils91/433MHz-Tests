@@ -1,7 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
 #include <wiringPi.h>
+
+static long get_nanos(void) {
+    struct timespec ts;
+    timespec_get(&ts, TIME_UTC);
+    return (long)ts.tv_sec * 1000000000L + ts.tv_nsec;
+}
 int main (void)
 {
   wiringPiSetup () ;
@@ -14,12 +21,25 @@ int main (void)
   //pull-down on receiver input pin
   pullUpDnControl (2, PUD_DOWN); 
   int signal_status=0;
+  long signal_start_nanosec=get_nanos();
+  long signal_stop_nanosec=get_nanos();
   for (;;)
   {
 	  int r_status=digitalRead(2);
+	  if(r_status){
+		  signal_stop_nanosec=get_nanos();
+	  }else{
+		  signal_start_nanosec=get_nanos();
+	  }
 	  if(r_status!=signal_status){
 		  printf("Signal change\n");
 		  printf("Signal is now %i\n",r_status);
+		  if(r_status==0){
+			  printf("Signal was on %l\n",signal_stop_nanosec-signal_start_nanosec);
+		  }else{
+			  
+			  printf("Signal was off %l\n",signal_start_nanosec-signal_stop_nanosec);
+		  }
 		  signal_status=r_status;
 		  
 	  }
