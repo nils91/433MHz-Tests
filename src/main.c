@@ -35,10 +35,10 @@ int main (void)
 		  printf("Signal change\n");
 		  printf("Signal is now %i\n",r_status);
 		  if(r_status==0){
-			  printf("Signal was on %l\n",signal_stop_nanosec-signal_start_nanosec);
+			  printf("Signal was on %ld\n",signal_stop_nanosec-signal_start_nanosec);
 		  }else{
 			  
-			  printf("Signal was off %l\n",signal_start_nanosec-signal_stop_nanosec);
+			  printf("Signal was off %ld\n",signal_start_nanosec-signal_stop_nanosec);
 		  }
 		  signal_status=r_status;
 		  
