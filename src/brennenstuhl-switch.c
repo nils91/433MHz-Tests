@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
 
 #include <wiringPi.h>
 
@@ -12,11 +13,14 @@
 #define PULSE_CNT 50
 #define CMD_LEN 12
 
-static int get_min_pulslen(int pulslen,double deviation){
-	return pulslen-pulslen*deviation;
-}
-static int get_max_pulslen(int pulslen,double deviation){
-	return pulslen+pulslen*deviation;
+static void send_pulse(int pulslen,int status,int switch_on_end){
+	digitalWrite(0,status);
+	digitalWrite(1,status);
+	usleep(pulslen);
+	if(switch_on_end){
+		digitalWrite(0,!status);
+		digitalWrite(1,!status);
+	}
 }
 static int is_pulse_type(int pulslen,int pulstype){
 	switch (pulstype){
@@ -106,9 +110,8 @@ int main ( int argc, char *argv[] )
 {
   wiringPiSetup () ;
   //setup pins
-  pinMode (0, OUTPUT) ;
-  pinMode (1, OUTPUT) ;
-  pinMode (2, INPUT) ;
+  pinMode (0, OUTPUT) ;//LED
+  pinMode (1, OUTPUT) ;//Sender
   
   digitalWrite (1, LOW) ;
   //pull-down on receiver input pin
