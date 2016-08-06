@@ -106,16 +106,34 @@ static int encode_signal(int* signal,int signal_len,char *cmd,int cmd_len){
 }
 int main ( int argc, char *argv[] )
 {
+	if(argc<4) {
+		printf("Expecting at least four params.");
+		return 1;
+	}
   wiringPiSetup () ;
   //setup pins
   pinMode (0, OUTPUT) ;//LED
   pinMode (1, OUTPUT) ;//Sender
   
   digitalWrite (1, LOW) ;
-  int system_type=31;
+  int system_type=0;
   char unit_type='A';
   char onoff=0;
   int retries=5;
+  system_type=atoi(argv[1]);
+  unit_type=argv[2][0];
+  if(strcmp(argv[3],"on")==0){
+	  onoff=1;
+  }
+  if(argc>=4){
+	  retries=atoi(argv[4]);
+  }
+  printf("Brennenstuhl remote power socket. \nSystem code: %i \nUnit code: %c\nSwitch ",system_type,unit_type);
+  printf(argv[3]);
+  printf("\nRetries %i\n",retries);
+ 
+  
+  
   
  
 
@@ -132,7 +150,6 @@ int main ( int argc, char *argv[] )
 					 send_pulse(signal[i],pulse,1);
 					 pulse=pulse*-1+1;
 				  }
-				  printf("Signal send try %i\n",j);
 			  }
 			  
 		  }
