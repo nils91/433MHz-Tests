@@ -9,6 +9,10 @@ static long get_nanos(void) {
     clock_gettime(CLOCK_MONOTONIC,&ts);
     return (long)ts.tv_sec * 1000000000L + ts.tv_nsec;
 }
+static long get_micros()(void) {
+    struct timespec ts;
+    return get_nanos/1000;
+}
 int main (void)
 {
   wiringPiSetup () ;
@@ -21,12 +25,12 @@ int main (void)
   //pull-down on receiver input pin
   pullUpDnControl (2, PUD_DOWN); 
   int signal_status=0;
-  long last_edge_detection=get_nanos();  
+  long last_edge_detection=get_micros();  
   for (;;)
   {
 	  int r_status=digitalRead(2);	 
 	  if(r_status!=signal_status){ 
-		long edge_detection_time=get_nanos();
+		long edge_detection_time=get_micros();
 		  printf("Signal change\n");
 		  printf("Signal is now %i\n",r_status);
 		  if(r_status==0){ 
