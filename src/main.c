@@ -19,26 +19,24 @@ int main (void)
   
   digitalWrite (1, LOW) ;
   //pull-down on receiver input pin
-  pullUpDnControl (2, PUD_DOWN); 
+  pullUpDnControl (2, PUD_NONE); 
   int signal_status=0;
-  long signal_start_nanosec=get_nanos();
-  long signal_stop_nanosec=get_nanos();
+  long last_edge_detection=get_nanos();  
   for (;;)
   {
-	  int r_status=digitalRead(2);
-	  
-	  if(r_status!=signal_status){
+	  int r_status=digitalRead(2);	 
+	  if(r_status!=signal_status){ 
+		long edge_detection_time=get_nanos();
 		  printf("Signal change\n");
 		  printf("Signal is now %i\n",r_status);
 		  if(r_status==0){ 
-		  signal_stop_nanosec=get_nanos();
-			  printf("Signal was on %ld\n",signal_stop_nanosec-signal_start_nanosec);
+			  printf("Signal was on %ld\n",edge_detection_time-last_edge_detection);
 			 
 		  }else{
-			   signal_start_nanosec=get_nanos();
-			  printf("Signal was off %ld\n",signal_start_nanosec-signal_stop_nanosec);
+			  printf("Signal was off %ld\n",edge_detection_time-last_edge_detection);
 			 
 		  }
+		  last_edge_detection=edge_detection_time;
 		  signal_status=r_status;
 		  
 	  }
