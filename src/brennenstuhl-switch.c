@@ -141,6 +141,6 @@ int main ( int argc, char *argv[] )
 	  digitalWrite(0,LOW);
 	  digitalWrite(1,LOW);
   free(signal);
-  free(cmd);
+  //free(cmd);
   return 0 ;
 }
