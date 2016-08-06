@@ -31,7 +31,7 @@ int main (void)
 	  if(r_status!=signal_status){ 
 		long edge_detection_time=get_micros();
 		  if(r_status==0){ 
-			  printf("%i %ld\n",signal_status,nedge_detection_time-last_edge_detection);
+			  printf("%i %ld\n",signal_status,edge_detection_time-last_edge_detection);
 			 
 		  }else{
 			  printf("%i %ld\n",signal_status,edge_detection_time-last_edge_detection);
