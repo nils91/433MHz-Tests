@@ -55,7 +55,7 @@ static long get_micros(void) {
     return get_nanos()/1000;
 }
 static int decode_signal(int* signal){
-	char* cmd=malloc(CMD_LEN);
+	char* cmd=malloc(CMD_LEN+1);
 	int cmd_real_len=0;
 	int i=0;
 	for(i=0;i<PULSE_CNT;i+=4){
