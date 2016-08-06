@@ -1,4 +1,4 @@
-//For Brennestuhl RCS 1000 N remote power socket
+//Sender Brennestuhl RCS 1000 N remote power socket
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -8,8 +8,6 @@
 #define NOMINAL_SHORT_PULSE 320
 #define NOMINAL_LONG_PULSE 960
 #define NOMINAL_XTRA_LONG_PULSE 9920
-
-#define MAX_DEVIATION 0.2
 
 #define PULSE_CNT 50
 #define CMD_LEN 12

@@ -1,4 +1,4 @@
-//For Brennestuhl RCS 1000 N remote power socket
+//Decoder for Brennestuhl RCS 1000 N remote power socket
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
