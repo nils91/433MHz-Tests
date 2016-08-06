@@ -30,13 +30,11 @@ int main (void)
 	  int r_status=digitalRead(2);	 
 	  if(r_status!=signal_status){ 
 		long edge_detection_time=get_micros();
-		  printf("Signal change\n");
-		  printf("Signal is now %i\n",r_status);
 		  if(r_status==0){ 
-			  printf("Signal was on %ld\n",edge_detection_time-last_edge_detection);
+			  printf("%i %ld\n",signal_status,nedge_detection_time-last_edge_detection);
 			 
 		  }else{
-			  printf("Signal was off %ld\n",edge_detection_time-last_edge_detection);
+			  printf("%i %ld\n",signal_status,edge_detection_time-last_edge_detection);
 			 
 		  }
 		  last_edge_detection=edge_detection_time;
