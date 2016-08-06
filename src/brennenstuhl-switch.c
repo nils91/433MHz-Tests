@@ -13,6 +13,8 @@
 #define PULSE_CNT 50
 #define CMD_LEN 12
 
+#define START_PULSE 1
+
 static void send_pulse(int pulslen,int status,int switch_on_end){
 	digitalWrite(0,status);
 	digitalWrite(1,status);
@@ -22,32 +24,6 @@ static void send_pulse(int pulslen,int status,int switch_on_end){
 		digitalWrite(1,!status);
 	}
 }
-static int is_pulse_type(int pulslen,int pulstype){
-	switch (pulstype){
-		case NOMINAL_SHORT_PULSE:
-			return (pulslen>=get_min_pulslen(NOMINAL_SHORT_PULSE,MAX_DEVIATION)&&pulslen<get_max_pulslen(NOMINAL_SHORT_PULSE,MAX_DEVIATION));
-		case NOMINAL_LONG_PULSE:
-			return (pulslen>=get_min_pulslen(NOMINAL_LONG_PULSE,MAX_DEVIATION)&&pulslen<get_max_pulslen(NOMINAL_LONG_PULSE,MAX_DEVIATION));
-		case NOMINAL_XTRA_LONG_PULSE:
-			return (pulslen>=get_min_pulslen(NOMINAL_XTRA_LONG_PULSE,MAX_DEVIATION)&&pulslen<get_max_pulslen(NOMINAL_XTRA_LONG_PULSE,MAX_DEVIATION));
-		default:
-			break;
-	}
-	return 0;
-}
-static int get_pulse_type(int pulslen){
-	if(is_pulse_type(pulslen,NOMINAL_SHORT_PULSE)){
-		return NOMINAL_SHORT_PULSE;
-	}
-	if(is_pulse_type(pulslen,NOMINAL_LONG_PULSE)){
-		return NOMINAL_LONG_PULSE;
-	}
-	if(is_pulse_type(pulslen,NOMINAL_XTRA_LONG_PULSE)){
-		return NOMINAL_XTRA_LONG_PULSE;
-	}
-	return 0;
-}
-
 static long get_nanos(void) {
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC,&ts);
@@ -56,55 +32,84 @@ static long get_nanos(void) {
 static long get_micros(void) {
     return get_nanos()/1000;
 }
-static int decode_signal(int* signal){
-	char cmd[CMD_LEN];
-	int cmd_real_len=0;
-	int i=0;
-	for(i=0;i<PULSE_CNT;i+=4){
-		if(i+4<=PULSE_CNT){
-			if(signal[i]==NOMINAL_SHORT_PULSE&&signal[i+1]==NOMINAL_LONG_PULSE&&signal[i+2]==NOMINAL_SHORT_PULSE&&signal[i+3]==NOMINAL_LONG_PULSE){
-				cmd[i/4]=1;
-				cmd_real_len++;
-			}
-			if(signal[i]==NOMINAL_SHORT_PULSE&&signal[i+1]==NOMINAL_LONG_PULSE&&signal[i+2]==NOMINAL_LONG_PULSE&&signal[i+3]==NOMINAL_SHORT_PULSE){
-				cmd[i/4]=0;				
-				cmd_real_len++;
-			}
+static int encode_cmd(char* cmd,int cmd_len,int system_code,char unit_code,char onoff){
+	memset(cmd,0,cmd_len);
+	if(cmd_len==12){
+		//set system code
+		if(system_code>=16){
+			cmd[0]=1;
+			system_code-=16;
 		}
-		if(i+2<=PULSE_CNT){
-			if(signal[i]==NOMINAL_SHORT_PULSE&&signal[i+1]==NOMINAL_XTRA_LONG_PULSE){
-				if(cmd_real_len==12){
-					cmd_real_len++;
-				}
-			}
+		if(system_code>=8){
+			cmd[1]=1;
+			system_code-=8;
 		}
+		if(system_code>=4){
+			cmd[2]=1;
+			system_code-=4;
+		}
+		if(system_code>=2){
+			cmd[3]=1;
+			system_code-=2;
+		}
+		if(system_code>=1){
+			cmd[4]=1;
+			system_code-=1;
+		}
+		//set unit code
+		switch(unit_code){
+			case 'A':
+				cmd[5]=1;
+				break;
+			case 'B':
+				cmd[6]=1;
+				break;
+			case 'C':
+				cmd[7]=1;
+				break;
+			case 'D':
+				cmd[8]=1;
+				break;
+			case 'E':
+				cmd[9]=1;
+				break;
+			default:
+				break;
+		}
+		//set command
+		if(onoff==1){
+			cmd[10]=1;
+			cmd[11]=0;
+		}else{
+			cmd[10]=0;
+			cmd[11]=1;
+		}
+		return 1;
 	}
-	printf("Signal decoded\n");
-	if(cmd_real_len==13){
-		printf("Signal for Brennenstuhl RCS 1000N detected\n");
-		printf("System code (DP) is ");
-		for(i=0;i<5;i++){
-			printf("%i",cmd[i]);
-		}
-		printf("\nUnit code is ");
-		for(i=5;i<10;i++){
+	return 0;
+}
+static int encode_signal(int* signal,int signal_len,char *cmd,int cmd_len){
+	if(signal_len==50){
+		int i=0;
+		for(i=0;i<cmd_len;i++){
 			if(cmd[i]==1){
-				printf("%c",'A'+(i-5));
+				signal[i*4]=NOMINAL_SHORT_PULSE;
+				signal[i*4+1]=NOMINAL_LONG_PULSE;
+				signal[i*4+2]=NOMINAL_SHORT_PULSE;
+				signal[i*4+3]=NOMINAL_LONG_PULSE;
+			}else{
+				signal[i*4]=NOMINAL_SHORT_PULSE;
+				signal[i*4+1]=NOMINAL_LONG_PULSE;
+				signal[i*4+2]=NOMINAL_LONG_PULSE;
+				signal[i*4+3]=NOMINAL_SHORT_PULSE;
 			}
 		}
-		printf("\nCommand is ");
-		if(cmd[10]==1){
-			printf("on\n");
-		}else{
-			printf("off\n");
-		}
-		if(cmd[10]!=cmd[11]){
-			printf("Command verified\n");
-		}else{
-			printf("Command notverified\n");
-		}
+		//insert footer
+		signal[48]=NOMINAL_SHORT_PULSE;
+		signal[49]=NOMINAL_XTRA_LONG_PULSE;
+		return 1;
 	}
-	
+	return 0;
 }
 int main ( int argc, char *argv[] )
 {
@@ -114,53 +119,24 @@ int main ( int argc, char *argv[] )
   pinMode (1, OUTPUT) ;//Sender
   
   digitalWrite (1, LOW) ;
-  //pull-down on receiver input pin
-  pullUpDnControl (2, PUD_DOWN); 
+  
   int signal_status=0;
   long last_edge_detection=get_micros();
 
-	//signal detection init
+	//signal sending init
 	int* signal=malloc(PULSE_CNT);
-	int pulse_counter=0;
-	int signal_start=0; //flag to signal a new signal
-  for (;;)
-  {
-	  int r_status=digitalRead(2);	 
-	  if(r_status!=signal_status){ 
-		long edge_detection_time=get_micros();
-		int pulslen=edge_detection_time-last_edge_detection;
-		if(signal_start==1){
-			signal_start=0;
-			pulse_counter=0;
-		}
-		switch(get_pulse_type(pulslen)){
-			case NOMINAL_SHORT_PULSE:
-				signal[pulse_counter]=NOMINAL_SHORT_PULSE;
-				break;
-			case NOMINAL_LONG_PULSE:
-				signal[pulse_counter]=NOMINAL_LONG_PULSE;
-				break;
-			case NOMINAL_XTRA_LONG_PULSE:
-				signal[pulse_counter]=NOMINAL_XTRA_LONG_PULSE;
-				decode_signal(signal);
-				if(signal_status==0){
-					signal_start=1;
-				}
-				break;
-			default:
-				break;
-		}
-		if(pulse_counter<PULSE_CNT)
-			pulse_counter++;
-		 
-		  last_edge_detection=edge_detection_time;
-		  signal_status=r_status;
-		  
-	  }
-	  digitalWrite(0, r_status);
-	  
-	  
-  }
+	char *cmd=malloc(CMD_LEN);
+	if(encode_cmd(cmd,CMD_LEN,31,'A',1)){
+		  if(encode_signal(signal,PULSE_CNT,cmd,CMD_LEN)){
+			  char pulse=START_PULSE;
+			  int i=0;
+			  for(i=0;i<PULSE_CNT;i++){
+				 send_pulse(signal[i],pulse,1);
+				 pulse=pulse*-1+1;
+			  }
+		  }
+	  }  
   free(signal);
+  free(cmd);
   return 0 ;
 }
