@@ -126,7 +126,7 @@ int main ( int argc, char *argv[] )
 
 	//signal sending init
 	int* signal=malloc(PULSE_CNT);
-	char *cmd=malloc(CMD_LEN);
+	char* cmd=malloc(CMD_LEN);
 	if(encode_cmd(cmd,CMD_LEN,31,'A',1)){
 		  if(encode_signal(signal,PULSE_CNT,cmd,CMD_LEN)){
 			  char pulse=START_PULSE;
