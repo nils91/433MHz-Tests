@@ -1,5 +1,6 @@
 //Sender Brennestuhl RCS 1000 N remote power socket
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
