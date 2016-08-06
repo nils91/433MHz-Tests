@@ -71,13 +71,13 @@ int main (void)
 		int pulslen=edge_detection_time-last_edge_detection;
 		switch(get_pulse_type(pulslen)){
 			case NOMINAL_SHORT_PULSE:
-				printf("NOMINAL_SHORT_PULSE %i\n",r_status);
+				printf("NOMINAL_SHORT_PULSE %i\n",signal_status);
 				break;
 			case NOMINAL_LONG_PULSE:
-				printf("NOMINAL_LONG_PULSE %i\n",r_status);
+				printf("NOMINAL_LONG_PULSE %i\n",signal_status);
 				break;
 			case NOMINAL_XTRA_LONG_PULSE:
-				printf("NOMINAL_XTRA_LONG_PULSE %i\n",r_status);
+				printf("NOMINAL_XTRA_LONG_PULSE %i\n",signal_status);
 				break;
 			default:
 				break;
