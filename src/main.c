@@ -89,7 +89,7 @@ int main (void)
 	int* signal=malloc(PULSE_CNT);
 	memset(signal,0,PULSE_CNT);
 	int pulse_counter=0;
-	int singal_start=0; //flag to signal a new signal
+	int signal_start=0; //flag to signal a new signal
   for (;;)
   {
 	  int r_status=digitalRead(2);	 
