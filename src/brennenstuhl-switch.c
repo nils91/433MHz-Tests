@@ -107,7 +107,7 @@ static int encode_signal(int* signal,int signal_len,char *cmd,int cmd_len){
 int main ( int argc, char *argv[] )
 {
 	if(argc<4) {
-		printf("Expecting at least four params.");
+		printf("Expecting at least four params.\n");
 		return 1;
 	}
   wiringPiSetup () ;
@@ -128,7 +128,7 @@ int main ( int argc, char *argv[] )
   if(argc>=4){
 	  retries=atoi(argv[4]);
   }
-  printf("Brennenstuhl remote power socket. \nSystem code: %i \nUnit code: %c\nSwitch ",system_type,unit_type);
+  printf("Brennenstuhl remote power socket. \nSystem code: %i \nUnit code: %c\nSwitch %i ",system_type,unit_type,onoff);
   printf(argv[3]);
   printf("\nRetries %i\n",retries);
  
