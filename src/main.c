@@ -87,7 +87,7 @@ static int decode_signal(int* signal){
 		printf("\nUnit code is ");
 		for(i=5;i<10;i++){
 			if(cmd[i]==1){
-				printf("%c",'A'+(i-6));
+				printf("%c",'A'+(i-5));
 			}
 		}
 		printf("\nCommand is ");
