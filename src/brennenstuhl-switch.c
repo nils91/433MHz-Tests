@@ -19,7 +19,7 @@
 static void send_pulse(int pulslen,int status,int switch_on_end){
 	digitalWrite(0,status);
 	digitalWrite(1,status);
-	usleep(pulslen*1000);
+	usleep(pulslen);
 	if(switch_on_end){
 		digitalWrite(0,!status);
 		digitalWrite(1,!status);
@@ -112,21 +112,29 @@ int main ( int argc, char *argv[] )
   pinMode (1, OUTPUT) ;//Sender
   
   digitalWrite (1, LOW) ;
+  int system_type=31;
+  char unit_type='A';
+  char onoff=1;
+  int retries=15;
   
  
 
 	//signal sending init
 	int signal[PULSE_CNT];
 	char cmd[CMD_LEN];
-	if(encode_cmd(cmd,CMD_LEN,31,'A',1)){
+	if(encode_cmd(cmd,CMD_LEN,system_type,unit_type,onoff)){
 		  if(encode_signal(signal,PULSE_CNT,cmd,CMD_LEN)){
-			  char pulse=START_PULSE;
-			  int i=0;
-			  for(i=0;i<PULSE_CNT;i++){
-				 send_pulse(signal[i],pulse,1);
-				 pulse=pulse*-1+1;
+			  int j=0;
+			  for(j=0;j<retries;j++){
+				  char pulse=START_PULSE;
+				  int i=0;
+				  for(i=0;i<PULSE_CNT;i++){
+					 send_pulse(signal[i],pulse,1);
+					 pulse=pulse*-1+1;
+				  }
+				  printf("Signal send try %i\n",j);
 			  }
-			  printf("Signal send\n");
+			  
 		  }
 	  }  
 	  digitalWrite(0,LOW);
