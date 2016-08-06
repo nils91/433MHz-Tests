@@ -10,8 +10,7 @@ static long get_nanos(void) {
     return (long)ts.tv_sec * 1000000000L + ts.tv_nsec;
 }
 static long get_micros()(void) {
-    struct timespec ts;
-    return get_nanos/1000;
+    return get_nanos()/1000;
 }
 int main (void)
 {
