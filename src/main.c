@@ -9,7 +9,7 @@ static long get_nanos(void) {
     clock_gettime(CLOCK_MONOTONIC,&ts);
     return (long)ts.tv_sec * 1000000000L + ts.tv_nsec;
 }
-static long get_micros()(void) {
+static long get_micros(void) {
     return get_nanos()/1000;
 }
 int main (void)
