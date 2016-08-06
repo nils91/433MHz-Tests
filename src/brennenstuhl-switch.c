@@ -33,7 +33,7 @@ static long get_micros(void) {
     return get_nanos()/1000;
 }
 static int encode_cmd(char* cmd,int cmd_len,int system_code,char unit_code,char onoff){
-	memset(cmd,0,cmd_len);
+	memset((void*)cmd,0,cmd_len);
 	if(cmd_len==12){
 		//set system code
 		if(system_code>=16){
