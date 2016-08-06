@@ -19,19 +19,11 @@
 static void send_pulse(int pulslen,int status,int switch_on_end){
 	digitalWrite(0,status);
 	digitalWrite(1,status);
-	usleep(pulslen);
+	usleep(pulslen*1000);
 	if(switch_on_end){
 		digitalWrite(0,!status);
 		digitalWrite(1,!status);
 	}
-}
-static long get_nanos(void) {
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC,&ts);
-    return (long)ts.tv_sec * 1000000000L + ts.tv_nsec;
-}
-static long get_micros(void) {
-    return get_nanos()/1000;
 }
 static int encode_cmd(char* cmd,int cmd_len,int system_code,char unit_code,char onoff){
 	memset((void*)cmd,0,cmd_len);
