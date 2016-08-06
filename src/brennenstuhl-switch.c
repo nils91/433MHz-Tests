@@ -114,8 +114,8 @@ int main ( int argc, char *argv[] )
   digitalWrite (1, LOW) ;
   int system_type=31;
   char unit_type='A';
-  char onoff=1;
-  int retries=15;
+  char onoff=0;
+  int retries=5;
   
  
 
