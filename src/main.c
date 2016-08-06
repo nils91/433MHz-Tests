@@ -87,7 +87,6 @@ int main (void)
 
 	//signal detection init
 	int* signal=malloc(PULSE_CNT);
-	memset(signal,0,PULSE_CNT);
 	int pulse_counter=0;
 	int signal_start=0; //flag to signal a new signal
   for (;;)
