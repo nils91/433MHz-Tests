@@ -10,6 +10,9 @@
 #define NOMINAL_XTRA_LONG_PULSE 9920
 
 #define MAX_DEVIATION 0.2
+
+#define PULSE_CNT 50
+
 static int get_min_pulslen(int pulslen,double deviation){
 	return pulslen-pulslen*deviation;
 }
@@ -50,6 +53,24 @@ static long get_nanos(void) {
 static long get_micros(void) {
     return get_nanos()/1000;
 }
+static int decode_signal(int* signal){
+	int i=0;
+	for(i=0;i<PULSE_CNT;i+=4){
+		if(i+4<=PULSE_CNT){
+			if(signal[i]==NOMINAL_SHORT_PULSE&&signal[i+1]==NOMINAL_LONG_PULSE&&signal[i+2]==NOMINAL_SHORT_PULSE&&signal[i+3]==NOMINAL_LONG_PULSE){
+				printf("1");
+			}
+			if(signal[i]==NOMINAL_SHORT_PULSE&&signal[i+1]==NOMINAL_LONG_PULSE&&signal[i+2]==NOMINAL_LONG_PULSE&&signal[i+3]==NOMINAL_SHORT_PULSE){
+				printf("0");
+			}
+		}
+		if(i+2<=PULSE_CNT){
+			if(signal[i]==NOMINAL_SHORT_PULSE&&signal[i+1]==NOMINAL_XTRA_LONG_PULSE){
+				printf("F\n");
+			}
+		}
+	}
+}
 int main (void)
 {
   wiringPiSetup () ;
@@ -62,26 +83,42 @@ int main (void)
   //pull-down on receiver input pin
   pullUpDnControl (2, PUD_DOWN); 
   int signal_status=0;
-  long last_edge_detection=get_micros();  
+  long last_edge_detection=get_micros();
+
+	//signal detection init
+	int* signal=malloc(PULSE_CNT);
+	memset(signal,0,PULSE_CNT);
+	int pulse_counter=0;
+	int singal_start=0; //flag to signal a new signal
   for (;;)
   {
 	  int r_status=digitalRead(2);	 
 	  if(r_status!=signal_status){ 
 		long edge_detection_time=get_micros();
 		int pulslen=edge_detection_time-last_edge_detection;
+		if(signal_start==1){
+			signal_start=0;
+			pulse_counter=0;
+		}
 		switch(get_pulse_type(pulslen)){
 			case NOMINAL_SHORT_PULSE:
-				printf("NOMINAL_SHORT_PULSE %i\n",signal_status);
+				signal[pulse_counter]=NOMINAL_SHORT_PULSE;
 				break;
 			case NOMINAL_LONG_PULSE:
-				printf("NOMINAL_LONG_PULSE %i\n",signal_status);
+				signal[pulse_counter]=NOMINAL_LONG_PULSE;
 				break;
 			case NOMINAL_XTRA_LONG_PULSE:
-				printf("NOMINAL_XTRA_LONG_PULSE %i\n",signal_status);
+				signal[pulse_counter]=NOMINAL_XTRA_LONG_PULSE;
+				decode_signal(signal);
+				if(signal_status==0){
+					signal_start=1;
+				}
 				break;
 			default:
 				break;
 		}
+		if(pulse_counter<PULSE_CNT)
+			pulse_counter++;
 		 
 		  last_edge_detection=edge_detection_time;
 		  signal_status=r_status;
@@ -91,5 +128,6 @@ int main (void)
 	  
 	  
   }
+  free(signal);
   return 0 ;
 }
