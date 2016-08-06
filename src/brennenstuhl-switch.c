@@ -125,8 +125,8 @@ int main ( int argc, char *argv[] )
   long last_edge_detection=get_micros();
 
 	//signal sending init
-	int* signal=malloc(PULSE_CNT);
-	char* cmd=malloc(CMD_LEN);
+	int signal[PULSE_CNT];
+	char cmd[CMD_LEN];
 	if(encode_cmd(cmd,CMD_LEN,31,'A',1)){
 		  if(encode_signal(signal,PULSE_CNT,cmd,CMD_LEN)){
 			  char pulse=START_PULSE;
@@ -140,7 +140,6 @@ int main ( int argc, char *argv[] )
 	  }  
 	  digitalWrite(0,LOW);
 	  digitalWrite(1,LOW);
-  free(signal);
-  free(cmd);
+ 
   return 0 ;
 }
