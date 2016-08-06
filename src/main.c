@@ -19,7 +19,7 @@ int main (void)
   
   digitalWrite (1, LOW) ;
   //pull-down on receiver input pin
-  pullUpDnControl (2, PUD_NONE); 
+  pullUpDnControl (2, PUD_OFF); 
   int signal_status=0;
   long last_edge_detection=get_nanos();  
   for (;;)
