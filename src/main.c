@@ -55,7 +55,7 @@ static long get_micros(void) {
     return get_nanos()/1000;
 }
 static int decode_signal(int* signal){
-	char* cmd=malloc(CMD_LEN+1);
+	char cmd[]=char[CMD_LEN];
 	int cmd_real_len=0;
 	int i=0;
 	for(i=0;i<PULSE_CNT;i+=4){
@@ -77,6 +77,7 @@ static int decode_signal(int* signal){
 			}
 		}
 	}
+	printf("Signal decoded\n");
 	if(cmd_real_len==13){
 		printf("Signal for Brennenstuhl RCS 1000N detected\n");
 		printf("System code (DP) is ");
@@ -101,7 +102,6 @@ static int decode_signal(int* signal){
 			printf("Command notverified\n");
 		}
 	}
-	free(cmd);
 	
 }
 int main (void)
