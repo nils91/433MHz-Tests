@@ -19,11 +19,11 @@ static int get_max_pulslen(int pulslen,double deviation){
 static int is_pulse_type(int pulslen,int pulstype){
 	switch (pulstype){
 		case NOMINAL_SHORT_PULSE:
-			return (pulslen>=get_min_pulslen(NOMINAL_SHORT_PULSE,MAX_DEVIATION)||pulslen<get_max_pulslen(NOMINAL_SHORT_PULSE,MAX_DEVIATION));
+			return (pulslen>=get_min_pulslen(NOMINAL_SHORT_PULSE,MAX_DEVIATION)&&pulslen<get_max_pulslen(NOMINAL_SHORT_PULSE,MAX_DEVIATION));
 		case NOMINAL_LONG_PULSE:
-			return (pulslen>=get_min_pulslen(NOMINAL_LONG_PULSE,MAX_DEVIATION)||pulslen<get_max_pulslen(NOMINAL_LONG_PULSE,MAX_DEVIATION));
+			return (pulslen>=get_min_pulslen(NOMINAL_LONG_PULSE,MAX_DEVIATION)&&pulslen<get_max_pulslen(NOMINAL_LONG_PULSE,MAX_DEVIATION));
 		case NOMINAL_XTRA_LONG_PULSE:
-			return (pulslen>=get_min_pulslen(NOMINAL_XTRA_LONG_PULSE,MAX_DEVIATION)||pulslen<get_max_pulslen(NOMINAL_XTRA_LONG_PULSE,MAX_DEVIATION));
+			return (pulslen>=get_min_pulslen(NOMINAL_XTRA_LONG_PULSE,MAX_DEVIATION)&&pulslen<get_max_pulslen(NOMINAL_XTRA_LONG_PULSE,MAX_DEVIATION));
 		default:
 			break;
 	}
