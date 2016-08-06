@@ -78,7 +78,7 @@ static int decode_signal(int* signal){
 		}
 	}
 	if(cmd_real_len==13){
-		printf("Signal for Brennenstuhl RCS 1000N detected\n")
+		printf("Signal for Brennenstuhl RCS 1000N detected\n");
 		printf("System code (DP) is ");
 		for(i=0;i<5;i++){
 			printf("%i",cmd[i]);
