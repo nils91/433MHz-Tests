@@ -108,11 +108,9 @@ int main (void)
 {
   wiringPiSetup () ;
   //setup pins
-  pinMode (0, OUTPUT) ;
-  pinMode (1, OUTPUT) ;
-  pinMode (2, INPUT) ;
+  pinMode (0, OUTPUT) ; //LED
+  pinMode (2, INPUT) ; //receiver
   
-  digitalWrite (1, LOW) ;
   //pull-down on receiver input pin
   pullUpDnControl (2, PUD_DOWN); 
   int signal_status=0;

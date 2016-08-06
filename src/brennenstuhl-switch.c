@@ -102,7 +102,7 @@ static int decode_signal(int* signal){
 	}
 	
 }
-int main (void)
+int main ( int argc, char *argv[] )
 {
   wiringPiSetup () ;
   //setup pins
