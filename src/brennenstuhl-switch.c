@@ -113,8 +113,7 @@ int main ( int argc, char *argv[] )
   
   digitalWrite (1, LOW) ;
   
-  int signal_status=0;
-  long last_edge_detection=get_micros();
+ 
 
 	//signal sending init
 	int signal[PULSE_CNT];
