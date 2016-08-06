@@ -134,8 +134,11 @@ int main ( int argc, char *argv[] )
 				 send_pulse(signal[i],pulse,1);
 				 pulse=pulse*-1+1;
 			  }
+			  printf("Signal send\n");
 		  }
 	  }  
+	  digitalWrite(0,LOW);
+	  digitalWrite(1,LOW);
   free(signal);
   free(cmd);
   return 0 ;
