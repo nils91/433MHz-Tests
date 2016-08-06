@@ -12,6 +12,7 @@
 #define MAX_DEVIATION 0.2
 
 #define PULSE_CNT 50
+#define CMD_LEN 12
 
 static int get_min_pulslen(int pulslen,double deviation){
 	return pulslen-pulslen*deviation;
@@ -54,22 +55,54 @@ static long get_micros(void) {
     return get_nanos()/1000;
 }
 static int decode_signal(int* signal){
+	char* cmd=malloc(CMD_LEN);
+	int cmd_real_len=0;
 	int i=0;
 	for(i=0;i<PULSE_CNT;i+=4){
 		if(i+4<=PULSE_CNT){
 			if(signal[i]==NOMINAL_SHORT_PULSE&&signal[i+1]==NOMINAL_LONG_PULSE&&signal[i+2]==NOMINAL_SHORT_PULSE&&signal[i+3]==NOMINAL_LONG_PULSE){
-				printf("1");
+				cmd[i/4]=1;
+				cmd_real_len++;
 			}
 			if(signal[i]==NOMINAL_SHORT_PULSE&&signal[i+1]==NOMINAL_LONG_PULSE&&signal[i+2]==NOMINAL_LONG_PULSE&&signal[i+3]==NOMINAL_SHORT_PULSE){
-				printf("0");
+				cmd[i/4]=0;				
+				cmd_real_len++;
 			}
 		}
 		if(i+2<=PULSE_CNT){
 			if(signal[i]==NOMINAL_SHORT_PULSE&&signal[i+1]==NOMINAL_XTRA_LONG_PULSE){
-				printf("F\n");
+				if(cmd_real_len==12){
+					cmd_real_len++;
+				}
 			}
 		}
 	}
+	if(cmd_real_len==13){
+		printf("Signal for Brennenstuhl RCS 1000N detected\n")
+		printf("System code (DP) is ");
+		for(i=0;i<5;i++){
+			printf("%i",cmd[i]);
+		}
+		printf("\nUnit code is ");
+		for(i=5;i<10;i++){
+			if(cmd[i]==1){
+				printf("%c",'A'+(i-6));
+			}
+		}
+		printf("\nCommand is ");
+		if(cmd[10]==1){
+			printf("on\n");
+		}else{
+			printf("off\n");
+		}
+		if(cmd[10]!=cmd[11]){
+			printf("Command verified\n");
+		}else{
+			printf("Command notverified\n");
+		}
+	}
+	free(cmd);
+	
 }
 int main (void)
 {
