@@ -23,12 +23,18 @@ struct arguments
 static struct argp_option options[] =
 {
   {"verbose", 'v', 0, 0, "Produce verbose output"},
-  {"alpha",   'a', "STRING1", 0,
-   "Do something with STRING1 related to the letter A"},
-  {"bravo",   'b', "STRING2", 0,
-   "Do something with STRING2 related to the letter B"},
-  {"output",  'o', "OUTFILE", 0,
-   "Output to OUTFILE instead of to standard output"},
+  {"pin",   'p', "PIN", 0,
+   "The pin which is connected to the 433MHz receiving unit"},
+  {"mirror",   'm', "PIN", 0,
+   "The pin which will be used to mirror the input"},
+  {"file",  'f', "FILE", 0,
+   "Log the signal to a file"},
+   {"nanoseconds",  'n', 0, 0,
+   "Use nanoseconds instead of microseconds"},
+   {"length",  'l', "SECONDS", 0,
+   "Specifies how long the program will log the signal. Requires time in seconds"},
+   {"type",  't', "TYPE", 0,
+   "Type of logging. 0 to log HIGH and LOW pulses, 1 for only HIGH, 2 for only LOW. Default is 0"},
   {0}
 };
 
