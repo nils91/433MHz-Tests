@@ -102,8 +102,8 @@ static unsigned long get_micros(void) {
 static unsigned long get_millis(void) {
 	return get_micros() / 1000;
 }
-static unsigned long get_seconds(void) {
-	return get_millis() / 1000;
+static unsigned int get_seconds(void) {
+	return time(0);
 }
 int main(int argc, char **argv) {
 	struct arguments arguments; //argument structure
@@ -156,7 +156,7 @@ int main(int argc, char **argv) {
 	}
 	int signal_status = 0;
 	unsigned long recording_start = time_func();
-	unsigned long recording_start_seconds = get_seconds();
+	unsigned int recording_start_seconds = get_seconds();
 	unsigned long last_edge_detection = time_func();
 	char line[sizeof(unsigned long) + 2 + 1 + 2 + (sizeof(int) + 2) * 2
 							+ sizeof(unsigned long) + 1+2];
