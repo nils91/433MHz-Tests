@@ -1,8 +1,9 @@
 #include <cstdlib>
 
-using namespace std;
+#include "Sniffer.h"
 
 int main(int argc, char* argv[])
 {
-  cout << ":-) hello world" << endl ;
+  Sniffer *snif=new Sniffer();
+  snif->snif();
 }
