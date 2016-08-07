@@ -174,6 +174,9 @@ if(arguments.verbose){
 }
   while (arguments.length==0||get_seconds()-recording_start_seconds<arguments.length)
   {
+	  if(arguents.verbose){
+		  printf("Logging since %lu\n",get_seconds()-recording_start_seconds);
+	  }
 	  int r_status=digitalRead(arguments.pin);	 
 	  if(r_status!=signal_status){ 
 		unsigned long edge_detection_time=time_func();
@@ -183,7 +186,7 @@ if(arguments.verbose){
 		}
 		unsigned long duration=edge_detection_time-last_edge_detection;
 		char *line=malloc(sizeof(unsigned long)+2+1+2+(sizeof(int)+2)*2+sizeof(unsigned long)+2);
-		sprintf(line,"%lu, %c, %i, %i, %lu\n",edge_detection_time,time_type,signal_status,r_status,duration);
+		sprintf(line,"%lu, %c, %i, %i, %lu\n",edge_detection_time-recording_start,time_type,signal_status,r_status,duration);
 		if(arguments.verbose)
 			printf(line);
 		free(line);
