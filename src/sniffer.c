@@ -36,7 +36,7 @@ static struct argp_option options[] =
    {"nanoseconds",  'n', 0, 0,
    "Use nanoseconds instead of microseconds"},
    {"length",  'l', "SECONDS", 0,
-   "Specifies how long the program will log the signal. Requires time in seconds"},
+   "Specifies how long the program will log the signal. Requires time in seconds. Default is 10"},
    {"type",  't', "TYPE", 0,
    "Type of logging. 0 to log HIGH and LOW pulses, 1 for only HIGH, 2 for only LOW. Default is 0"},
   {0}
@@ -122,12 +122,15 @@ static long get_micros(void) {
 }
 int main ( int argc, char **argv)
 {
-	int input_pin=-1; //-p
-	int verbose=0; //toggled with -v
-	char *logfile=0; //-f
-	int mirror_pin=-1; //-m
-	int ns=0; //log in nano seconds instead of microseconds //-n
-	int length=-1; //length in _seconds_. 0 means unlimited
+	struct arguments arguments; //argument structure
+	//set defaults
+	arguments.verbose=0;
+	arguments.logfile=0;
+	arguments.pin=-1;
+	arguments.mirror_pin=-1;
+	arguments.nanoseconds=0;
+	arguments.length=10;
+	arguments.type=0;
 	
   wiringPiSetup () ;
   //setup pins
