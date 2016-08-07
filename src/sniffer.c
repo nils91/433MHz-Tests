@@ -139,19 +139,24 @@ int main ( int argc, char **argv)
 	   printf("Log for %i\n",arguments.length);
    }
     printf("Logging type %i\n",arguments.type);
-	return;
-	 
+	if(pin==-1){
+		exit 1;
+	}
+	 //setup wiring pi
   wiringPiSetup () ;
   //setup pins
-  pinMode (0, OUTPUT) ;
-  pinMode (2, INPUT) ;
+  if(arguments.mirror_pin>=0){
+	   pinMode (arguments.mirror_pin, OUTPUT) ;
+  }
+ 
+  pinMode (arguments.pin, INPUT) ;
   //pull-down on receiver input pin
-  pullUpDnControl (2, PUD_DOWN); 
+  pullUpDnControl (arguments.pin, PUD_DOWN); 
   int signal_status=0;
   long last_edge_detection=get_micros();  
   for (;;)
   {
-	  int r_status=digitalRead(2);	 
+	  int r_status=digitalRead(arguments.pin);	 
 	  if(r_status!=signal_status){ 
 		long edge_detection_time=get_micros();
 		  printf("Signal change\n");
@@ -167,7 +172,10 @@ int main ( int argc, char **argv)
 		  signal_status=r_status;
 		  
 	  }
-	  digitalWrite(0, r_status);
+	  if(arguments.mirror_pin>=0){
+	   digitalWrite(arguments.mirror_pin, r_status);
+  }
+	  
 	  
 	  
   }
