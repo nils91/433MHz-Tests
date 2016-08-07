@@ -1,3 +1,4 @@
+//this program shows traffic on 433MHz
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
