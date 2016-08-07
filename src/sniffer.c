@@ -164,22 +164,29 @@ int main ( int argc, char **argv)
 		time_func=&get_nanos;
 	}
   int signal_status=0;
-  unsigned long recording_start=get_micros();
-  unsigned long last_edge_detection=get_micros();  
-  for (;;)
+  unsigned long recording_start=time_func();
+  unsigned long recording_start_seconds=get_seconds();
+  unsigned long last_edge_detection=time_func(); 
+//print table head
+char *head="time, time_type, old, new, pulse_length\n";
+if(verbose){
+	printf(head);
+}
+  while (arguments.length==0||get_seconds-recording_start_seconds<arguments.length)
   {
 	  int r_status=digitalRead(arguments.pin);	 
 	  if(r_status!=signal_status){ 
-		unsigned long edge_detection_time=get_micros();
-		  printf("Signal change\n");
-		  printf("Signal is now %i\n",r_status);
-		  if(r_status==0){ 
-			  printf("Signal was on %ld\n",edge_detection_time-last_edge_detection);
-			 
-		  }else{
-			  printf("Signal was off %ld\n",edge_detection_time-last_edge_detection);
-			 
-		  }
+		unsigned long edge_detection_time=time_func();
+		char time_type='m';
+		if(arguments.nanoseconds){
+			time_type='n';
+		}
+		unsigned long duration=edge_detection_time-last_edge_detection;
+		char *line=malloc(sizeof(unsigned long)+2+1+2+(sizeof(int)+2)*2+sizeof(unsigned long)+2);
+		sprintf(line,"%lu, %c, %i, %i, %lu\n",edge_detection_time,time_type,signal_status,r_status,duration);
+		printf(line);
+		free(line);
+		  
 		  last_edge_detection=edge_detection_time;
 		  signal_status=r_status;
 		  
