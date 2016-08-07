@@ -86,15 +86,14 @@ parse_opt (int key, char *arg, struct argp_state *state)
    A description of the non-option command-line arguments
      that we accept.
 */
-static char args_doc[] = "ARG1 ARG2";
+static char args_doc[] = "";
 
 /*
   DOC.  Field 4 in ARGP.
   Program documentation.
 */
 static char doc[] =
-"argex -- A program to demonstrate how to code command-line options
-and arguments.\vFrom the GNU C Tutorial.";
+"sniffer -- A program to record a signal from a sensor or wireless signal receiver.";
 
 /*
    The ARGP structure itself.
