@@ -4,16 +4,20 @@
 #include <argp.h>
 #include <unistd.h>
 #include <time.h>
+#include <string.h>
 
 #include <wiringPi.h>
 
 /* This structure is used by main to communicate with parse_opt. */
 struct arguments
 {
-  char *args[2];            /* ARG1 and ARG2 */
   int verbose;              /* The -v flag */
-  char *outfile;            /* Argument for -o */
-  char *string1, *string2;  /* Arguments for -a and -b */
+  char *logfile;            /* Argument for -f */
+  int pin;					//-p
+  int mirror_pin; //-m
+  int nanoseconds; //-n
+  int length;  /* -l */
+  int type; //-t
 };
 
 /*
@@ -53,14 +57,23 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 'v':
       arguments->verbose = 1;
       break;
-    case 'a':
-      arguments->string1 = arg;
+	 case 'f':
+      arguments->logfile = arg;
       break;
-    case 'b':
-      arguments->string2 = arg;
+	case 'p':
+      arguments->pin = atoi(arg);
       break;
-    case 'o':
-      arguments->outfile = arg;
+	case 'm':
+      arguments->mirror_pin = atoi(arg);
+      break;
+    case 'n':
+      arguments->nanoseconds = 1;
+      break;
+    case 'l':
+      arguments->length = atoi(arg);
+      break;
+    case 't':
+      arguments->type = atoi(arg);
       break;
     case ARGP_KEY_ARG:
       if (state->arg_num >= 2)
