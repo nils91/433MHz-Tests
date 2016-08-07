@@ -1,6 +1,8 @@
 //this program shows traffic on 433MHz
 #include <stdio.h>
 #include <stdlib.h>
+#include <getopt.h>
+#include <unistd.h>
 #include <time.h>
 
 #include <wiringPi.h>
@@ -15,6 +17,9 @@ static long get_micros(void) {
 }
 int main ( int argc, char **argv)
 {
+	int verbose=0;
+	char *logfile=0;
+	
   wiringPiSetup () ;
   //setup pins
   pinMode (0, OUTPUT) ;
