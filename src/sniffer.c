@@ -13,15 +13,12 @@ static long get_nanos(void) {
 static long get_micros(void) {
     return get_nanos()/1000;
 }
-int main (void)
+int main ( int argc, char *argv[])
 {
   wiringPiSetup () ;
   //setup pins
   pinMode (0, OUTPUT) ;
-  pinMode (1, OUTPUT) ;
   pinMode (2, INPUT) ;
-  
-  digitalWrite (1, LOW) ;
   //pull-down on receiver input pin
   pullUpDnControl (2, PUD_DOWN); 
   int signal_status=0;
