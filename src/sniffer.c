@@ -13,7 +13,7 @@ static long get_nanos(void) {
 static long get_micros(void) {
     return get_nanos()/1000;
 }
-int main ( int argc, char *argv[])
+int main ( int argc, char **argv)
 {
   wiringPiSetup () ;
   //setup pins
