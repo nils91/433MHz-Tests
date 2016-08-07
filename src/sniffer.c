@@ -174,9 +174,6 @@ if(arguments.verbose){
 }
   while (arguments.length==0||get_seconds()-recording_start_seconds<arguments.length)
   {
-	  if(arguments.verbose){
-		  printf("Logging since %lu\n",get_seconds()-recording_start_seconds);
-	  }
 	  int r_status=digitalRead(arguments.pin);	 
 	  if(r_status!=signal_status){ 
 		unsigned long edge_detection_time=time_func();
