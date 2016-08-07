@@ -182,8 +182,9 @@ if(arguments.verbose){
 			time_type='n';
 		}
 		unsigned long duration=edge_detection_time-last_edge_detection;
+		unsigned long time_since_start=edge_detection_time-recording_start;
 		char *line=malloc(sizeof(unsigned long)+2+1+2+(sizeof(int)+2)*2+sizeof(unsigned long)+2);
-		sprintf(line,"%lu, %c, %i, %i, %lu\n",edge_detection_time-recording_start,time_type,signal_status,r_status,duration);
+		sprintf(line,"%lu, %c, %i, %i, %lu\n",time_since_start,time_type,signal_status,r_status,duration);
 		if(arguments.verbose)
 			printf(line);
 		free(line);
