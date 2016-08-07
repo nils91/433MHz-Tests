@@ -175,7 +175,7 @@ int main(int argc, char **argv) {
 				time_type = 'n';
 			}
 			unsigned long duration = edge_detection_time - last_edge_detection;
-			unsigned long time_since_start = time_func();
+			unsigned long time_since_start = time_func()
 					- recording_start;
 			
 			sprintf(line, "%lu, %c, %i, %i, %lu\n", time_since_start, time_type,
