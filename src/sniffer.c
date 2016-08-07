@@ -164,7 +164,7 @@ int main(int argc, char **argv) {
 		printf(head);
 	}
 	while (arguments.length == 0
-			|| recording_start_seconds - get_seconds() < arguments.length) {
+			|| get_seconds() - recording_start_seconds < arguments.length) {
 		int r_status = digitalRead(arguments.pin);
 		if (r_status != signal_status) {
 			unsigned long edge_detection_time = time_func();
@@ -173,16 +173,15 @@ int main(int argc, char **argv) {
 				time_type = 'n';
 			}
 			unsigned long duration = edge_detection_time - last_edge_detection;
-			unsigned long time_since_start = recording_start
+			unsigned long time_since_start = time_func();
 					- recording_start;
-			char *line = malloc(
-					sizeof(unsigned long) + 2 + 1 + 2 + (sizeof(int) + 2) * 2
-							+ sizeof(unsigned long) + 1+2);
+			char line[sizeof(unsigned long) + 2 + 1 + 2 + (sizeof(int) + 2) * 2
+							+ sizeof(unsigned long) + 1+2];
 			sprintf(line, "%lu, %c, %i, %i, %lu\n", time_since_start, time_type,
 					signal_status, r_status, duration);
 			if (arguments.verbose)
 				printf(line);
-			free(line);
+			
 
 			last_edge_detection = edge_detection_time;
 			signal_status = r_status;
