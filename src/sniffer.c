@@ -76,7 +76,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       arguments->type = atoi(arg);
       break;
     case ARGP_KEY_END:
-      if (state->arg_num < 1)
+      if (state->arg_num < 2)
 	{
 	  argp_usage (state);
 	}
