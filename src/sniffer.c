@@ -1,7 +1,7 @@
 //this program shows traffic on 433MHz
 #include <stdio.h>
 #include <stdlib.h>
-#include <getopt.h>
+#include <argp.h>
 #include <unistd.h>
 #include <time.h>
 
