@@ -99,13 +99,19 @@ static char doc[] =
    The ARGP structure itself.
 */
 static struct argp argp = {options, parse_opt, args_doc, doc};
-static long get_nanos(void) {
+static unsigned long get_nanos(void) {
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC,&ts);
     return (long)ts.tv_sec * 1000000000L + ts.tv_nsec;
 }
-static long get_micros(void) {
+static unsigned long get_micros(void) {
     return get_nanos()/1000;
+}
+static unsigned long get_millis(void) {
+    return get_micros()/1000;
+}
+static unsigned long get_seconds(void) {
+    return get_millis()/1000;
 }
 int main ( int argc, char **argv)
 {
@@ -151,14 +157,20 @@ int main ( int argc, char **argv)
  
   pinMode (arguments.pin, INPUT) ;
   //pull-down on receiver input pin
-  pullUpDnControl (arguments.pin, PUD_DOWN); 
+  pullUpDnControl (arguments.pin, PUD_DOWN);
+//sniffer vars setup
+	unsigned long (*time_func)(void)=&get_micros;
+	if(arguments.nanoseconds){
+		time_func=&get_nanos;
+	}
   int signal_status=0;
-  long last_edge_detection=get_micros();  
+  unsigned long recording_start=get_micros();
+  unsigned long last_edge_detection=get_micros();  
   for (;;)
   {
 	  int r_status=digitalRead(arguments.pin);	 
 	  if(r_status!=signal_status){ 
-		long edge_detection_time=get_micros();
+		unsigned long edge_detection_time=get_micros();
 		  printf("Signal change\n");
 		  printf("Signal is now %i\n",r_status);
 		  if(r_status==0){ 
