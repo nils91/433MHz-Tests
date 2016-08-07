@@ -177,10 +177,20 @@ int main(int argc, char **argv) {
 			unsigned long duration = edge_detection_time - last_edge_detection;
 			unsigned long time_since_start = time_func()
 					- recording_start;
+			int write_flag=0;
+			if(signal_status==0&&r_status==1){//0->1
+				if(arguments.type==0||arguments.type==2){
+					write_flag=1;
+				}
+			}else{//1->0
+				if(arguments.type==0||arguments.type==1){
+					write_flag=1;
+				}
+			}
 			
 			sprintf(line, "%lu, %c, %i, %i, %lu\n", time_since_start, time_type,
 					signal_status, r_status, duration);
-			if (arguments.verbose)
+			if (arguments.verbose&&write_flag)
 				printf(line);
 			
 
@@ -190,6 +200,9 @@ int main(int argc, char **argv) {
 		}
 		if (arguments.mirror_pin >= 0) {
 			digitalWrite(arguments.mirror_pin, r_status);
+		}
+		if(!arguments.nanoseconds){
+			usleep(1);
 		}
 
 	}
