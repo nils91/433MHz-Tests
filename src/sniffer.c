@@ -179,5 +179,9 @@ int main ( int argc, char **argv)
 	  
 	  
   }
+  //turn mirror pin off
+  if(arguments.mirror_pin>=0){
+	   digitalWrite(arguments.mirror_pin, 0);
+  }
   return 0 ;
 }
