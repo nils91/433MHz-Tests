@@ -28,9 +28,9 @@ static struct argp_option options[] =
 {
   {"verbose", 'v', 0, 0, "Produce verbose output"},
   {"pin",   'p', "PIN", 0,
-   "The pin which is connected to the 433MHz receiving unit"},
+   "The pin which is connected to the 433MHz receiving unit. wiringPi pin numbering."},
   {"mirror",   'm', "PIN", 0,
-   "The pin which will be used to mirror the input"},
+   "The pin which will be used to mirror the input. wiringPi pin numbering."},
   {"file",  'f', "FILE", 0,
    "Log the signal to a file"},
    {"nanoseconds",  'n', 0, 0,
@@ -132,6 +132,27 @@ int main ( int argc, char **argv)
 	arguments.length=10;
 	arguments.type=0;
 	
+	//Parse
+  argp_parse (&argp, argc, argv, 0, 0, &arguments);
+  
+  //Debug output
+  printf("Verbose mode %i\n",arguments.verbose);
+  if(arguments.logfile){
+	  printf("Log to file ");
+	  printf(arguments.logfile);
+	  printf("\n");
+  }
+  printf("Input pin %i\n",arguments.pin);
+   printf("Mirror pin %i\n",arguments.mirror_pin);
+   if(arguments.nanoseconds){
+	   printf("Use nanoseconds instead of microseconds\n");
+   }
+   if(arguments.length){
+	   printf("Log for %i\n",arguments.length);
+   }
+    printf("Logging type %i\n",arguments.type);
+	return;
+	 
   wiringPiSetup () ;
   //setup pins
   pinMode (0, OUTPUT) ;
