@@ -132,9 +132,10 @@ int main ( int argc, char **argv)
 	arguments.length=10;
 	arguments.type=0;
 	
+	printf("Before parse\n");
 	//Parse
   argp_parse (&argp, argc, argv, 0, 0, &arguments);
-  
+  printf("After parse\n");
   //Debug output
   printf("Verbose mode %i\n",arguments.verbose);
   if(arguments.logfile){
