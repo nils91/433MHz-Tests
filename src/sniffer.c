@@ -115,30 +115,9 @@ int main(int argc, char **argv) {
 	arguments.nanoseconds = 0;
 	arguments.length = 10;
 	arguments.type = 0;
-
-	printf("Before parse\n");
 	//Parse
 	argp_parse(&argp, argc, argv, 0, 0, &arguments);
-	printf("After parse\n");
-	//Debug output
-	printf("Verbose mode %i\n", arguments.verbose);
-	if (arguments.logfile) {
-		printf("Log to file ");
-		printf(arguments.logfile);
-		printf("\n");
-	}
-	printf("Input pin %i\n", arguments.pin);
-	printf("Mirror pin %i\n", arguments.mirror_pin);
-	if (arguments.nanoseconds) {
-		printf("Use nanoseconds instead of microseconds\n");
-	}
-	if (arguments.length) {
-		printf("Log for %i\n", arguments.length);
-	}
-	printf("Logging type %i\n", arguments.type);
-	if (arguments.pin == -1) {
-		exit(1);
-	}
+	
 	//setup wiring pi
 	wiringPiSetup();
 	//setup pins
