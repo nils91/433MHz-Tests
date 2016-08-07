@@ -7,6 +7,93 @@
 
 #include <wiringPi.h>
 
+/* This structure is used by main to communicate with parse_opt. */
+struct arguments
+{
+  char *args[2];            /* ARG1 and ARG2 */
+  int verbose;              /* The -v flag */
+  char *outfile;            /* Argument for -o */
+  char *string1, *string2;  /* Arguments for -a and -b */
+};
+
+/*
+   OPTIONS.  Field 1 in ARGP.
+   Order of fields: {NAME, KEY, ARG, FLAGS, DOC}.
+*/
+static struct argp_option options[] =
+{
+  {"verbose", 'v', 0, 0, "Produce verbose output"},
+  {"alpha",   'a', "STRING1", 0,
+   "Do something with STRING1 related to the letter A"},
+  {"bravo",   'b', "STRING2", 0,
+   "Do something with STRING2 related to the letter B"},
+  {"output",  'o', "OUTFILE", 0,
+   "Output to OUTFILE instead of to standard output"},
+  {0}
+};
+
+
+/*
+   PARSER. Field 2 in ARGP.
+   Order of parameters: KEY, ARG, STATE.
+*/
+static error_t
+parse_opt (int key, char *arg, struct argp_state *state)
+{
+  struct arguments *arguments = state->input;
+
+  switch (key)
+    {
+    case 'v':
+      arguments->verbose = 1;
+      break;
+    case 'a':
+      arguments->string1 = arg;
+      break;
+    case 'b':
+      arguments->string2 = arg;
+      break;
+    case 'o':
+      arguments->outfile = arg;
+      break;
+    case ARGP_KEY_ARG:
+      if (state->arg_num >= 2)
+	{
+	  argp_usage(state);
+	}
+      arguments->args[state->arg_num] = arg;
+      break;
+    case ARGP_KEY_END:
+      if (state->arg_num < 2)
+	{
+	  argp_usage (state);
+	}
+      break;
+    default:
+      return ARGP_ERR_UNKNOWN;
+    }
+  return 0;
+}
+
+/*
+   ARGS_DOC. Field 3 in ARGP.
+   A description of the non-option command-line arguments
+     that we accept.
+*/
+static char args_doc[] = "ARG1 ARG2";
+
+/*
+  DOC.  Field 4 in ARGP.
+  Program documentation.
+*/
+static char doc[] =
+"argex -- A program to demonstrate how to code command-line options
+and arguments.\vFrom the GNU C Tutorial.";
+
+/*
+   The ARGP structure itself.
+*/
+static struct argp argp = {options, parse_opt, args_doc, doc};
 static long get_nanos(void) {
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC,&ts);
