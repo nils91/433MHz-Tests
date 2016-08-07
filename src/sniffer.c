@@ -201,9 +201,7 @@ int main(int argc, char **argv) {
 		if (arguments.mirror_pin >= 0) {
 			digitalWrite(arguments.mirror_pin, r_status);
 		}
-		if(!arguments.nanoseconds){
-			usleep(1);
-		}
+		
 
 	}
 	//turn mirror pin off
