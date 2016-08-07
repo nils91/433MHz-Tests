@@ -7,6 +7,6 @@ class Sniffer{
 		Sniffer();
 		void snif();
 		~Sniffer();
-}
+};
 
 #endif
