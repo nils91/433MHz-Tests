@@ -174,7 +174,7 @@ if(arguments.verbose){
 }
   while (arguments.length==0||get_seconds()-recording_start_seconds<arguments.length)
   {
-	  if(arguents.verbose){
+	  if(arguments.verbose){
 		  printf("Logging since %lu\n",get_seconds()-recording_start_seconds);
 	  }
 	  int r_status=digitalRead(arguments.pin);	 
