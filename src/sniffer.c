@@ -172,8 +172,8 @@ int main(int argc, char **argv) {
 			if (arguments.nanoseconds) {
 				time_type = 'n';
 			}
-			unsigned long duration = last_edge_detection - edge_detection_time;
-			unsigned long time_since_start = edge_detection_time
+			unsigned long duration = edge_detection_time - last_edge_detection;
+			unsigned long time_since_start = recording_start
 					- recording_start;
 			char *line = malloc(
 					sizeof(unsigned long) + 2 + 1 + 2 + (sizeof(int) + 2) * 2
