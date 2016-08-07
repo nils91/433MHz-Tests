@@ -164,7 +164,7 @@ int main(int argc, char **argv) {
 		printf(head);
 	}
 	while (arguments.length == 0
-			|| get_seconds() - recording_start_seconds < arguments.length) {
+			|| recording_start_seconds - get_seconds() < arguments.length) {
 		int r_status = digitalRead(arguments.pin);
 		if (r_status != signal_status) {
 			unsigned long edge_detection_time = time_func();
@@ -172,7 +172,7 @@ int main(int argc, char **argv) {
 			if (arguments.nanoseconds) {
 				time_type = 'n';
 			}
-			unsigned long duration = edge_detection_time - last_edge_detection;
+			unsigned long duration = last_edge_detection - edge_detection_time;
 			unsigned long time_since_start = edge_detection_time
 					- recording_start;
 			char *line = malloc(
